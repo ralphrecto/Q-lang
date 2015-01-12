@@ -1,4 +1,4 @@
-# Q-lang implementation Roadmap
+# Q-lang implementation roadmap
   * Stage 1: lexing/parsing
   * Stage 2: CPS conversion
   * Stage 3: Closure conversion
