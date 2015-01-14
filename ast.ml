@@ -18,3 +18,6 @@ type expr =
   | App of expr * expr
   | Let of var * expr * expr
   | If of bexpr * expr * expr
+
+type value = Int of int | VLam of var * expr 
+
