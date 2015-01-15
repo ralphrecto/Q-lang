@@ -27,6 +27,8 @@ rule token =
   | "-"         { MINUS }
   | "."         { DOT }
   | "="         { EQ }
+  | "("         { LPARENS }
+  | ")"         { RPARENS }
   | "let"       { LET }
   | "in"        { IN }
   | "if"        { IF }
@@ -35,6 +37,7 @@ rule token =
   | "true"      { TRUE }
   | "false"     { FALSE }
   | "not"       { NOT }
+  | var as x    { VAR x }
   | num as n    { INT(int_of_string n) }
   | eof         { EOF }
   | _           { error lexbuf }
