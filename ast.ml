@@ -10,6 +10,7 @@ and expr =
   (* arithmetic expressions *)
   | Int of int
   | Plus of expr * expr
+  | Minus of expr * expr
   (* regular expressions *)
   | Var of var
   | Lam of var * expr
@@ -17,4 +18,7 @@ and expr =
   | Let of var * expr * expr
   | If of bexpr * expr * expr
 
-type value = VInt of int | VLam of var * expr 
+and value = VInt of int
+  | VLam of var * expr * env
+
+and env = var -> value

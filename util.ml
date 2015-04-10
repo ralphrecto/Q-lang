@@ -8,9 +8,10 @@ let rec string_of_bexpr = function
 and string_of_expr = function
   | Int x -> string_of_int x
   | Plus (x, y) -> (string_of_expr x) ^ " + " ^ (string_of_expr y)
+  | Minus (x, y) -> (string_of_expr x) ^ " - " ^ (string_of_expr y)
   | Var x -> x
-  | Lam (v, e1) -> "lam" ^ v ^ ". " ^ (string_of_expr e1)
-  | App (e1, e2) -> (string_of_expr e1) ^ " " ^ (string_of_expr e2)
+  | Lam (v, e1) -> "(lam " ^ v ^ ". " ^ (string_of_expr e1) ^ ")"
+  | App (e1, e2) -> "App(" ^ (string_of_expr e1) ^ ", " ^ (string_of_expr e2) ^ ")"
   | Let (v, e1, in_expr) -> 
       let e1str = string_of_expr e1 in
       let instr = string_of_expr in_expr in
@@ -23,5 +24,5 @@ and string_of_expr = function
 
 let string_of_value = function
   | VInt x -> string_of_int x
-  | VLam (x, e) -> string_of_expr (Lam (x, e))
+  | VLam (x, e, _) -> string_of_expr (Lam (x, e))
 

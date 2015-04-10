@@ -1,14 +1,15 @@
 open Ast
+open Util
 
 exception TypeError of string
-exception VarError
+exception VarError of string
 
-type env = var -> value 
+let empty_env = fun x -> raise (VarError ("var " ^ x ^ " not found "))
 
-let empty_env = fun x -> raise VarError
-
-let add_binding (e: env)(x: var)(v: value): env =
+let add_binding (e: env) (x: var) (v: value): env =
   fun y -> if x = y then v else e y
+
+let lookup (e: env) (x: var): value = e x
 
 let rec evalb (exp: bexpr)(envr: env): bool =
   match exp with
@@ -28,13 +29,18 @@ and eval' (exp: expr)(envr: env): value =
       | VInt x', VInt y' -> VInt (x' + y')
       | _ -> raise (TypeError "+ takes 2 arithmetic expressions")
     end
-  | Var x -> envr x
-  | Lam (v, e1) -> VLam (v, e1)
+  | Minus (x, y) -> begin
+      match eval' x envr, eval' y envr with
+      | VInt x', VInt y' -> VInt (x' - y')
+      | _ -> raise (TypeError "+ takes 2 arithmetic expressions")
+    end
+  | Var x -> envr x 
+  | Lam (v, body) -> VLam (v, body, envr)
   | App (e1, e2) -> begin
     match eval' e1 envr with
     | VInt _ -> raise (TypeError "trying to apply args to int")
-    | VLam (v, e1') ->
-        eval' e1' (add_binding envr v (eval' e2 envr))
+    | VLam (v, e1', in_env) ->
+        eval' e1' (add_binding in_env v (eval' e2 envr))
     end
   | Let (v, e1, e2) ->
       eval' e2 (add_binding envr v (eval' e1 envr))
